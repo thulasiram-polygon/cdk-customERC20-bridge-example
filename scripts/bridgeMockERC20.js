@@ -66,7 +66,7 @@ async function main() {
   );
   await tokenContract.approve(ERC20BridgeContractAddress, tokenAmount);
 
-  console.log("approved tokens");
+  console.log("Approve done succesfully");
 
   const tx = await erc20BridgeContract.bridgeToken(
     destinationUserAddress,
@@ -76,7 +76,7 @@ async function main() {
 
   console.log("Tx Hash", (await tx.wait()).transactionHash);
 
-  console.log("Bridge done succesfully");
+  console.log("Bridging done succesfully");
 }
 
 main().catch((e) => {

@@ -16,12 +16,13 @@ const pathdeployeERC20Bridge = path.join(
 const deploymentERC20Bridge = require(pathdeployeERC20Bridge);
 
 async function main() {
-  const CHAILD_CHAIN_URL = process.env.CHILDCHAIN_URL;
+  const CHILD_CHAIN_URL = process.env.CHILDCHAIN_URL;
+  const CHILD_CHAIN_BRIDGE_URL = process.env.CHILD_CHAIN_BRIDGE_API_URL;
   const BRIDGE_ADDRESS = process.env.BRIDGE_ADDRESS;
 
   // Load providers for chaild chain
   let chaildChainProvider = new ethers.providers.JsonRpcProvider(
-    CHAILD_CHAIN_URL
+    CHILD_CHAIN_URL
   );
 
   // Get deployers for chaild chain
@@ -39,10 +40,10 @@ async function main() {
   }
 
   let chaildChainERC20BridgeContractAddress =
-    deploymentERC20Bridge.ERC20BridgeChaildChain;
+    deploymentERC20Bridge.ERC20BridgeChildChain;
 
   const axios = AXIOS.default.create({
-    baseURL: CHAILD_CHAIN_URL,
+    baseURL: CHILD_CHAIN_BRIDGE_URL,
   });
 
   const bridgeChaildChainFactory = await ethers.getContractFactory(
@@ -55,13 +56,15 @@ async function main() {
     getClaimsFromAcc + chaildChainERC20BridgeContractAddress,
     { params: { limit: 100, offset: 0 } }
   );
+  console.log("depositAxions: ", depositAxions.request.path);
+  console.log("depositAxions: ", depositAxions.data);
   const depositsArray = depositAxions.data.deposits;
-  console.log("depositsArray: ", depositsArray);
 
   if (!depositsArray || depositsArray.length === 0) {
     console.log("Not deposits yet!");
     return;
   }
+  console.log("depositsArray: ", depositsArray.data);
   console.log("We have deposits: ", depositsArray.length);
   for (let i = 0; i < depositsArray.length; i++) {
     const currentDeposit = depositsArray[i];
